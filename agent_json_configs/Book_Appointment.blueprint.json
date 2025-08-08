@@ -6,7 +6,7 @@
             "module": "gateway:CustomWebHook",
             "version": 1,
             "parameters": {
-                "hook": 1183887,
+                "hook": 1187157,
                 "maxResults": 1
             },
             "mapper": {},
@@ -21,7 +21,7 @@
                             "data": {
                                 "editable": "true"
                             },
-                            "label": "book_appointment"
+                            "label": "book_apptmt"
                         }
                     }
                 },
@@ -36,130 +36,6 @@
                         "name": "maxResults",
                         "type": "number",
                         "label": "Maximum number of results"
-                    }
-                ],
-                "interface": [
-                    {
-                        "name": "chat",
-                        "spec": [
-                            {
-                                "name": "chat_id",
-                                "type": "text"
-                            },
-                            {
-                                "name": "agent_id",
-                                "type": "text"
-                            },
-                            {
-                                "name": "agent_version",
-                                "type": "number"
-                            },
-                            {
-                                "name": "agent_name",
-                                "type": "text"
-                            },
-                            {
-                                "name": "retell_llm_dynamic_variables",
-                                "spec": [
-                                    {
-                                        "name": "session_type",
-                                        "type": "text"
-                                    }
-                                ],
-                                "type": "collection"
-                            },
-                            {
-                                "name": "collected_dynamic_variables",
-                                "spec": [],
-                                "type": "collection"
-                            },
-                            {
-                                "name": "chat_status",
-                                "type": "text"
-                            },
-                            {
-                                "name": "transcript",
-                                "type": "text"
-                            },
-                            {
-                                "name": "message_with_tool_calls",
-                                "spec": {
-                                    "spec": [
-                                        {
-                                            "name": "message_id",
-                                            "type": "text"
-                                        },
-                                        {
-                                            "name": "role",
-                                            "type": "text"
-                                        },
-                                        {
-                                            "name": "created_timestamp",
-                                            "type": "number"
-                                        },
-                                        {
-                                            "name": "content",
-                                            "type": "text"
-                                        }
-                                    ],
-                                    "type": "collection"
-                                },
-                                "type": "array"
-                            },
-                            {
-                                "name": "chat_cost",
-                                "spec": [
-                                    {
-                                        "name": "product_costs",
-                                        "type": "array"
-                                    },
-                                    {
-                                        "name": "combined_cost",
-                                        "type": "number"
-                                    }
-                                ],
-                                "type": "collection"
-                            },
-                            {
-                                "name": "opt_out_sensitive_data_storage",
-                                "type": "boolean"
-                            },
-                            {
-                                "name": "tool_mocks",
-                                "type": "array"
-                            }
-                        ],
-                        "type": "collection"
-                    },
-                    {
-                        "name": "name",
-                        "type": "text"
-                    },
-                    {
-                        "name": "args",
-                        "spec": [
-                            {
-                                "name": "bookingtype",
-                                "type": "text"
-                            },
-                            {
-                                "name": "new_booking_time",
-                                "type": "text"
-                            },
-                            {
-                                "name": "requested_service",
-                                "type": "text"
-                            },
-                            {
-                                "name": "name",
-                                "type": "text"
-                            },
-                            {
-                                "name": "email",
-                                "type": "text"
-                            }
-                        ],
-                        "type": "collection"
                     }
                 ]
             }
@@ -284,9 +160,12 @@
                                 ]
                             },
                             "mapper": {
-                                "model": "gpt-4o",
-                                "top_p": "1",
                                 "select": "chat",
+                                "temperature": "1",
+                                "top_p": "1",
+                                "n_completions": "1",
+                                "model": "gpt-4o",
+                                "max_tokens": "300",
                                 "messages": [
                                     {
                                         "role": "system",
@@ -298,9 +177,6 @@
                                         "imageDetail": "auto"
                                     }
                                 ],
-                                "max_tokens": "300",
-                                "temperature": "1",
-                                "n_completions": "1",
                                 "response_format": "json_object",
                                 "parseJSONResponse": true
                             },
@@ -310,16 +186,35 @@
                                     "y": 950
                                 },
                                 "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "Personal_OpenAI_Account",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "openai-gpt-3"
+                                            }
+                                        }
+                                    },
                                     "expect": {
+                                        "select": {
+                                            "label": "Create a Chat Completion (GPT and o1 models)"
+                                        },
+                                        "logit_bias": {
+                                            "mode": "chose"
+                                        },
+                                        "tool_choice": {
+                                            "mode": "chose",
+                                            "label": "Empty"
+                                        },
                                         "stop": {
+                                            "mode": "chose"
+                                        },
+                                        "additionalParameters": {
                                             "mode": "chose"
                                         },
                                         "model": {
                                             "mode": "chose",
                                             "label": "gpt-4o (system)"
-                                        },
-                                        "select": {
-                                            "label": "Create a Chat Completion (GPT and o1 models)"
                                         },
                                         "messages": {
                                             "mode": "chose",
@@ -335,23 +230,16 @@
                                                         "mode": "chose",
                                                         "label": "User"
                                                     },
-                                                    "imageDetail": {
-                                                        "mode": "chose",
-                                                        "label": "Auto"
-                                                    },
                                                     "imageInputType": {
                                                         "mode": "chose",
                                                         "label": "Empty"
+                                                    },
+                                                    "imageDetail": {
+                                                        "mode": "chose",
+                                                        "label": "Auto"
                                                     }
                                                 }
                                             ]
-                                        },
-                                        "logit_bias": {
-                                            "mode": "chose"
-                                        },
-                                        "tool_choice": {
-                                            "mode": "chose",
-                                            "label": "Empty"
                                         },
                                         "response_format": {
                                             "mode": "chose",
@@ -359,18 +247,6 @@
                                         },
                                         "parseJSONResponse": {
                                             "mode": "chose"
-                                        },
-                                        "additionalParameters": {
-                                            "mode": "chose"
-                                        }
-                                    },
-                                    "parameters": {
-                                        "__IMTCONN__": {
-                                            "data": {
-                                                "scoped": "true",
-                                                "connection": "openai-gpt-3"
-                                            },
-                                            "label": "Personal_OpenAI_Account"
                                         }
                                     }
                                 },
@@ -438,8 +314,9 @@
                                     },
                                     {
                                         "name": "logit_bias",
+                                        "type": "array",
+                                        "label": "Token Probability",
                                         "spec": {
-                                            "name": "value",
                                             "spec": [
                                                 {
                                                     "name": "token",
@@ -459,10 +336,9 @@
                                                 }
                                             ],
                                             "type": "collection",
-                                            "label": "Token Probability"
-                                        },
-                                        "type": "array",
-                                        "label": "Token Probability"
+                                            "label": "Token Probability",
+                                            "name": "value"
+                                        }
                                     },
                                     {
                                         "name": "seed",
@@ -483,21 +359,22 @@
                                     },
                                     {
                                         "name": "stop",
-                                        "spec": {
-                                            "name": "value",
-                                            "type": "text",
-                                            "label": "Stop Sequence"
-                                        },
                                         "type": "array",
                                         "label": "Stop Sequences",
                                         "validate": {
                                             "maxItems": 4
+                                        },
+                                        "spec": {
+                                            "type": "text",
+                                            "label": "Stop Sequence",
+                                            "name": "value"
                                         }
                                     },
                                     {
                                         "name": "additionalParameters",
+                                        "type": "array",
+                                        "label": "Other Input Parameters",
                                         "spec": {
-                                            "name": "value",
                                             "spec": [
                                                 {
                                                     "name": "key",
@@ -570,10 +447,9 @@
                                                 }
                                             ],
                                             "type": "collection",
-                                            "label": "Input Parameter"
-                                        },
-                                        "type": "array",
-                                        "label": "Other Input Parameters"
+                                            "label": "Input Parameter",
+                                            "name": "value"
+                                        }
                                     },
                                     {
                                         "name": "model",
@@ -588,13 +464,18 @@
                                     },
                                     {
                                         "name": "messages",
+                                        "type": "array",
+                                        "label": "Messages",
+                                        "required": true,
                                         "spec": {
-                                            "name": "value",
+                                            "label": "Message",
+                                            "type": "collection",
                                             "spec": [
                                                 {
                                                     "name": "role",
                                                     "type": "select",
                                                     "label": "Role",
+                                                    "required": true,
                                                     "options": {
                                                         "store": [
                                                             {
@@ -611,28 +492,30 @@
                                                                         "name": "imageInputType",
                                                                         "type": "select",
                                                                         "label": "Image Input Type",
+                                                                        "mappable": false,
                                                                         "options": [
                                                                             {
-                                                                                "label": "URL",
                                                                                 "value": "url",
+                                                                                "label": "URL",
                                                                                 "nested": [
                                                                                     {
-                                                                                        "help": "Make sure to use a publicly accessible URL.\nYou can test if your image is publicly accessible by opening the link in an incognito tab.",
                                                                                         "name": "imageUrl",
+                                                                                        "label": "Image URL",
                                                                                         "type": "url",
-                                                                                        "label": "Image URL"
+                                                                                        "help": "Make sure to use a publicly accessible URL.\nYou can test if your image is publicly accessible by opening the link in an incognito tab."
                                                                                     }
                                                                                 ]
                                                                             },
                                                                             {
-                                                                                "label": "Image File",
                                                                                 "value": "file",
+                                                                                "label": "Image File",
                                                                                 "nested": [
                                                                                     {
                                                                                         "name": "imageFile",
+                                                                                        "label": "Image",
+                                                                                        "type": "collection",
                                                                                         "spec": [
                                                                                             {
-                                                                                                "help": "Accepted extensions: `.jpg`, `.jpeg`, `.png`, `.webp` and `.gif`.",
                                                                                                 "name": "imageFilename",
                                                                                                 "type": "filename",
                                                                                                 "label": "Image Filename",
@@ -643,7 +526,8 @@
                                                                                                     "png",
                                                                                                     "webp",
                                                                                                     "gif"
-                                                                                                ]
+                                                                                                ],
+                                                                                                "help": "Accepted extensions: `.jpg`, `.jpeg`, `.png`, `.webp` and `.gif`."
                                                                                             },
                                                                                             {
                                                                                                 "name": "imageData",
@@ -651,33 +535,30 @@
                                                                                                 "label": "Image Data",
                                                                                                 "semantic": "file:data"
                                                                                             }
-                                                                                        ],
-                                                                                        "type": "collection",
-                                                                                        "label": "Image"
+                                                                                        ]
                                                                                     }
                                                                                 ]
                                                                             }
-                                                                        ],
-                                                                        "mappable": false
+                                                                        ]
                                                                     },
                                                                     {
-                                                                        "help": "Recommended value: `Auto`",
                                                                         "name": "imageDetail",
                                                                         "type": "select",
                                                                         "label": "Image Detail",
+                                                                        "help": "Recommended value: `Auto`",
                                                                         "options": [
                                                                             {
-                                                                                "label": "Auto",
                                                                                 "value": "auto",
-                                                                                "default": true
+                                                                                "default": true,
+                                                                                "label": "Auto"
                                                                             },
                                                                             {
-                                                                                "label": "High",
-                                                                                "value": "high"
+                                                                                "value": "high",
+                                                                                "label": "High"
                                                                             },
                                                                             {
-                                                                                "label": "Low",
-                                                                                "value": "low"
+                                                                                "value": "low",
+                                                                                "label": "Low"
                                                                             }
                                                                         ]
                                                                     }
@@ -694,9 +575,19 @@
                                                                         "label": "Text Content"
                                                                     },
                                                                     {
-                                                                        "mode": "edit",
                                                                         "name": "tool_calls",
+                                                                        "label": "Tool Calls",
+                                                                        "type": "array",
+                                                                        "labels": {
+                                                                            "add": "Add tool call"
+                                                                        },
+                                                                        "mode": "edit",
+                                                                        "mappable": {
+                                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
+                                                                        },
                                                                         "spec": {
+                                                                            "label": "Tool Call",
+                                                                            "type": "collection",
                                                                             "spec": [
                                                                                 {
                                                                                     "name": "type",
@@ -704,50 +595,39 @@
                                                                                     "default": "function"
                                                                                 },
                                                                                 {
-                                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
                                                                                     "name": "id",
                                                                                     "type": "text",
-                                                                                    "label": "Tool call ID"
+                                                                                    "label": "Tool call ID",
+                                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
                                                                                 },
                                                                                 {
                                                                                     "name": "function",
+                                                                                    "type": "collection",
+                                                                                    "label": "Function",
                                                                                     "spec": [
                                                                                         {
-                                                                                            "help": "The name of the function previously called.",
                                                                                             "name": "name",
-                                                                                            "type": "text",
                                                                                             "label": "Name",
-                                                                                            "required": true
+                                                                                            "type": "text",
+                                                                                            "required": true,
+                                                                                            "help": "The name of the function previously called."
                                                                                         },
                                                                                         {
-                                                                                            "help": "The arguments previously output by the AI.",
                                                                                             "name": "arguments",
-                                                                                            "type": "text",
                                                                                             "label": "Arguments",
-                                                                                            "required": true
+                                                                                            "type": "text",
+                                                                                            "required": true,
+                                                                                            "help": "The arguments previously output by the AI."
                                                                                         }
-                                                                                    ],
-                                                                                    "type": "collection",
-                                                                                    "label": "Function"
+                                                                                    ]
                                                                                 }
-                                                                            ],
-                                                                            "type": "collection",
-                                                                            "label": "Tool Call"
-                                                                        },
-                                                                        "type": "array",
-                                                                        "label": "Tool Calls",
-                                                                        "labels": {
-                                                                            "add": "Add tool call"
-                                                                        },
-                                                                        "mappable": {
-                                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
+                                                                            ]
                                                                         }
                                                                     }
                                                                 ]
                                                             },
                                                             {
                                                                 "label": "Developer / System",
-                                                                "value": "system",
                                                                 "nested": [
                                                                     {
                                                                         "help": "Text content of the message on behalf of the selected __Role__.",
@@ -755,7 +635,8 @@
                                                                         "type": "text",
                                                                         "label": "Text Content"
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "value": "system"
                                                             },
                                                             {
                                                                 "label": "Tool",
@@ -769,25 +650,20 @@
                                                                         "required": true
                                                                     },
                                                                     {
-                                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
+                                                                        "label": "Tool Call ID.",
                                                                         "name": "tool_call_id",
                                                                         "type": "text",
-                                                                        "label": "Tool Call ID.",
-                                                                        "required": true
+                                                                        "required": true,
+                                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
                                                                     }
                                                                 ]
                                                             }
                                                         ]
-                                                    },
-                                                    "required": true
+                                                    }
                                                 }
                                             ],
-                                            "type": "collection",
-                                            "label": "Message"
-                                        },
-                                        "type": "array",
-                                        "label": "Messages",
-                                        "required": true
+                                            "name": "value"
+                                        }
                                     },
                                     {
                                         "name": "response_format",
@@ -3197,8 +3073,8 @@
                                             "module": "util:TextAggregator",
                                             "version": 1,
                                             "parameters": {
-                                                "feeder": 32,
-                                                "rowSeparator": ""
+                                                "rowSeparator": "",
+                                                "feeder": 32
                                             },
                                             "filter": {
                                                 "name": "",
@@ -3213,7 +3089,7 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "value": "{{32.start}},"
+                                                "value": "formatDate({{32.start}}; \"YYYY-MM-DDTHH:mm:ssXXX\"; \"America/Toronto\"),"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -3221,14 +3097,14 @@
                                                     "y": 600
                                                 },
                                                 "restore": {
-                                                    "extra": {
-                                                        "feeder": {
-                                                            "label": "Iterator [32]"
-                                                        }
-                                                    },
                                                     "parameters": {
                                                         "rowSeparator": {
                                                             "label": "Empty"
+                                                        }
+                                                    },
+                                                    "extra": {
+                                                        "feeder": {
+                                                            "label": "Iterator [32]"
                                                         }
                                                     }
                                                 },
@@ -6479,8 +6355,8 @@
                                             "module": "util:TextAggregator",
                                             "version": 1,
                                             "parameters": {
-                                                "feeder": 85,
-                                                "rowSeparator": ""
+                                                "rowSeparator": "",
+                                                "feeder": 85
                                             },
                                             "filter": {
                                                 "name": "",
@@ -6495,7 +6371,7 @@
                                                 ]
                                             },
                                             "mapper": {
-                                                "value": "{{85.start}},"
+                                                "value": "formatDate({{85.start}}; \"YYYY-MM-DDTHH:mm:ssXXX\"; \"America/Toronto\"),"
                                             },
                                             "metadata": {
                                                 "designer": {
@@ -6503,14 +6379,14 @@
                                                     "y": 2869
                                                 },
                                                 "restore": {
-                                                    "extra": {
-                                                        "feeder": {
-                                                            "label": "Iterator [85]"
-                                                        }
-                                                    },
                                                     "parameters": {
                                                         "rowSeparator": {
                                                             "label": "Empty"
+                                                        }
+                                                    },
+                                                    "extra": {
+                                                        "feeder": {
+                                                            "label": "Iterator [85]"
                                                         }
                                                     }
                                                 },
@@ -6717,9 +6593,12 @@
                                 ]
                             },
                             "mapper": {
-                                "model": "gpt-4o-mini",
-                                "top_p": "1",
                                 "select": "chat",
+                                "temperature": "1",
+                                "top_p": "1",
+                                "n_completions": "1",
+                                "model": "gpt-4o-mini",
+                                "max_tokens": "300",
                                 "messages": [
                                     {
                                         "role": "system",
@@ -6731,9 +6610,6 @@
                                         "imageDetail": "auto"
                                     }
                                 ],
-                                "max_tokens": "300",
-                                "temperature": "1",
-                                "n_completions": "1",
                                 "response_format": "json_object",
                                 "parseJSONResponse": true
                             },
@@ -6743,16 +6619,35 @@
                                     "y": 2358
                                 },
                                 "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "Personal_OpenAI_Account",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "openai-gpt-3"
+                                            }
+                                        }
+                                    },
                                     "expect": {
+                                        "select": {
+                                            "label": "Create a Chat Completion (GPT and o1 models)"
+                                        },
+                                        "logit_bias": {
+                                            "mode": "chose"
+                                        },
+                                        "tool_choice": {
+                                            "mode": "chose",
+                                            "label": "Empty"
+                                        },
                                         "stop": {
+                                            "mode": "chose"
+                                        },
+                                        "additionalParameters": {
                                             "mode": "chose"
                                         },
                                         "model": {
                                             "mode": "chose",
                                             "label": "gpt-4o-mini (system)"
-                                        },
-                                        "select": {
-                                            "label": "Create a Chat Completion (GPT and o1 models)"
                                         },
                                         "messages": {
                                             "mode": "chose",
@@ -6768,23 +6663,16 @@
                                                         "mode": "chose",
                                                         "label": "User"
                                                     },
-                                                    "imageDetail": {
-                                                        "mode": "chose",
-                                                        "label": "Auto"
-                                                    },
                                                     "imageInputType": {
                                                         "mode": "chose",
                                                         "label": "Empty"
+                                                    },
+                                                    "imageDetail": {
+                                                        "mode": "chose",
+                                                        "label": "Auto"
                                                     }
                                                 }
                                             ]
-                                        },
-                                        "logit_bias": {
-                                            "mode": "chose"
-                                        },
-                                        "tool_choice": {
-                                            "mode": "chose",
-                                            "label": "Empty"
                                         },
                                         "response_format": {
                                             "mode": "chose",
@@ -6792,18 +6680,6 @@
                                         },
                                         "parseJSONResponse": {
                                             "mode": "chose"
-                                        },
-                                        "additionalParameters": {
-                                            "mode": "chose"
-                                        }
-                                    },
-                                    "parameters": {
-                                        "__IMTCONN__": {
-                                            "data": {
-                                                "scoped": "true",
-                                                "connection": "openai-gpt-3"
-                                            },
-                                            "label": "Personal_OpenAI_Account"
                                         }
                                     }
                                 },
@@ -6871,8 +6747,9 @@
                                     },
                                     {
                                         "name": "logit_bias",
+                                        "type": "array",
+                                        "label": "Token Probability",
                                         "spec": {
-                                            "name": "value",
                                             "spec": [
                                                 {
                                                     "name": "token",
@@ -6892,10 +6769,9 @@
                                                 }
                                             ],
                                             "type": "collection",
-                                            "label": "Token Probability"
-                                        },
-                                        "type": "array",
-                                        "label": "Token Probability"
+                                            "label": "Token Probability",
+                                            "name": "value"
+                                        }
                                     },
                                     {
                                         "name": "seed",
@@ -6916,21 +6792,22 @@
                                     },
                                     {
                                         "name": "stop",
-                                        "spec": {
-                                            "name": "value",
-                                            "type": "text",
-                                            "label": "Stop Sequence"
-                                        },
                                         "type": "array",
                                         "label": "Stop Sequences",
                                         "validate": {
                                             "maxItems": 4
+                                        },
+                                        "spec": {
+                                            "type": "text",
+                                            "label": "Stop Sequence",
+                                            "name": "value"
                                         }
                                     },
                                     {
                                         "name": "additionalParameters",
+                                        "type": "array",
+                                        "label": "Other Input Parameters",
                                         "spec": {
-                                            "name": "value",
                                             "spec": [
                                                 {
                                                     "name": "key",
@@ -7003,10 +6880,9 @@
                                                 }
                                             ],
                                             "type": "collection",
-                                            "label": "Input Parameter"
-                                        },
-                                        "type": "array",
-                                        "label": "Other Input Parameters"
+                                            "label": "Input Parameter",
+                                            "name": "value"
+                                        }
                                     },
                                     {
                                         "name": "model",
@@ -7021,13 +6897,18 @@
                                     },
                                     {
                                         "name": "messages",
+                                        "type": "array",
+                                        "label": "Messages",
+                                        "required": true,
                                         "spec": {
-                                            "name": "value",
+                                            "label": "Message",
+                                            "type": "collection",
                                             "spec": [
                                                 {
                                                     "name": "role",
                                                     "type": "select",
                                                     "label": "Role",
+                                                    "required": true,
                                                     "options": {
                                                         "store": [
                                                             {
@@ -7044,28 +6925,30 @@
                                                                         "name": "imageInputType",
                                                                         "type": "select",
                                                                         "label": "Image Input Type",
+                                                                        "mappable": false,
                                                                         "options": [
                                                                             {
-                                                                                "label": "URL",
                                                                                 "value": "url",
+                                                                                "label": "URL",
                                                                                 "nested": [
                                                                                     {
-                                                                                        "help": "Make sure to use a publicly accessible URL.\nYou can test if your image is publicly accessible by opening the link in an incognito tab.",
                                                                                         "name": "imageUrl",
+                                                                                        "label": "Image URL",
                                                                                         "type": "url",
-                                                                                        "label": "Image URL"
+                                                                                        "help": "Make sure to use a publicly accessible URL.\nYou can test if your image is publicly accessible by opening the link in an incognito tab."
                                                                                     }
                                                                                 ]
                                                                             },
                                                                             {
-                                                                                "label": "Image File",
                                                                                 "value": "file",
+                                                                                "label": "Image File",
                                                                                 "nested": [
                                                                                     {
                                                                                         "name": "imageFile",
+                                                                                        "label": "Image",
+                                                                                        "type": "collection",
                                                                                         "spec": [
                                                                                             {
-                                                                                                "help": "Accepted extensions: `.jpg`, `.jpeg`, `.png`, `.webp` and `.gif`.",
                                                                                                 "name": "imageFilename",
                                                                                                 "type": "filename",
                                                                                                 "label": "Image Filename",
@@ -7076,7 +6959,8 @@
                                                                                                     "png",
                                                                                                     "webp",
                                                                                                     "gif"
-                                                                                                ]
+                                                                                                ],
+                                                                                                "help": "Accepted extensions: `.jpg`, `.jpeg`, `.png`, `.webp` and `.gif`."
                                                                                             },
                                                                                             {
                                                                                                 "name": "imageData",
@@ -7084,33 +6968,30 @@
                                                                                                 "label": "Image Data",
                                                                                                 "semantic": "file:data"
                                                                                             }
-                                                                                        ],
-                                                                                        "type": "collection",
-                                                                                        "label": "Image"
+                                                                                        ]
                                                                                     }
                                                                                 ]
                                                                             }
-                                                                        ],
-                                                                        "mappable": false
+                                                                        ]
                                                                     },
                                                                     {
-                                                                        "help": "Recommended value: `Auto`",
                                                                         "name": "imageDetail",
                                                                         "type": "select",
                                                                         "label": "Image Detail",
+                                                                        "help": "Recommended value: `Auto`",
                                                                         "options": [
                                                                             {
-                                                                                "label": "Auto",
                                                                                 "value": "auto",
-                                                                                "default": true
+                                                                                "default": true,
+                                                                                "label": "Auto"
                                                                             },
                                                                             {
-                                                                                "label": "High",
-                                                                                "value": "high"
+                                                                                "value": "high",
+                                                                                "label": "High"
                                                                             },
                                                                             {
-                                                                                "label": "Low",
-                                                                                "value": "low"
+                                                                                "value": "low",
+                                                                                "label": "Low"
                                                                             }
                                                                         ]
                                                                     }
@@ -7127,9 +7008,19 @@
                                                                         "label": "Text Content"
                                                                     },
                                                                     {
-                                                                        "mode": "edit",
                                                                         "name": "tool_calls",
+                                                                        "label": "Tool Calls",
+                                                                        "type": "array",
+                                                                        "labels": {
+                                                                            "add": "Add tool call"
+                                                                        },
+                                                                        "mode": "edit",
+                                                                        "mappable": {
+                                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
+                                                                        },
                                                                         "spec": {
+                                                                            "label": "Tool Call",
+                                                                            "type": "collection",
                                                                             "spec": [
                                                                                 {
                                                                                     "name": "type",
@@ -7137,50 +7028,39 @@
                                                                                     "default": "function"
                                                                                 },
                                                                                 {
-                                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
                                                                                     "name": "id",
                                                                                     "type": "text",
-                                                                                    "label": "Tool call ID"
+                                                                                    "label": "Tool call ID",
+                                                                                    "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
                                                                                 },
                                                                                 {
                                                                                     "name": "function",
+                                                                                    "type": "collection",
+                                                                                    "label": "Function",
                                                                                     "spec": [
                                                                                         {
-                                                                                            "help": "The name of the function previously called.",
                                                                                             "name": "name",
-                                                                                            "type": "text",
                                                                                             "label": "Name",
-                                                                                            "required": true
+                                                                                            "type": "text",
+                                                                                            "required": true,
+                                                                                            "help": "The name of the function previously called."
                                                                                         },
                                                                                         {
-                                                                                            "help": "The arguments previously output by the AI.",
                                                                                             "name": "arguments",
-                                                                                            "type": "text",
                                                                                             "label": "Arguments",
-                                                                                            "required": true
+                                                                                            "type": "text",
+                                                                                            "required": true,
+                                                                                            "help": "The arguments previously output by the AI."
                                                                                         }
-                                                                                    ],
-                                                                                    "type": "collection",
-                                                                                    "label": "Function"
+                                                                                    ]
                                                                                 }
-                                                                            ],
-                                                                            "type": "collection",
-                                                                            "label": "Tool Call"
-                                                                        },
-                                                                        "type": "array",
-                                                                        "label": "Tool Calls",
-                                                                        "labels": {
-                                                                            "add": "Add tool call"
-                                                                        },
-                                                                        "mappable": {
-                                                                            "help": "You can map the entire `Choices[]: Message.Tool Calls` array from a previous Create a Completion module here."
+                                                                            ]
                                                                         }
                                                                     }
                                                                 ]
                                                             },
                                                             {
                                                                 "label": "Developer / System",
-                                                                "value": "system",
                                                                 "nested": [
                                                                     {
                                                                         "help": "Text content of the message on behalf of the selected __Role__.",
@@ -7188,7 +7068,8 @@
                                                                         "type": "text",
                                                                         "label": "Text Content"
                                                                     }
-                                                                ]
+                                                                ],
+                                                                "value": "system"
                                                             },
                                                             {
                                                                 "label": "Tool",
@@ -7202,25 +7083,20 @@
                                                                         "required": true
                                                                     },
                                                                     {
-                                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`.",
+                                                                        "label": "Tool Call ID.",
                                                                         "name": "tool_call_id",
                                                                         "type": "text",
-                                                                        "label": "Tool Call ID.",
-                                                                        "required": true
+                                                                        "required": true,
+                                                                        "help": "Map this directly from the output of a previous **Create a Completion** module. Look for `Choices[]: Message.Tool Calls[]: ID`."
                                                                     }
                                                                 ]
                                                             }
                                                         ]
-                                                    },
-                                                    "required": true
+                                                    }
                                                 }
                                             ],
-                                            "type": "collection",
-                                            "label": "Message"
-                                        },
-                                        "type": "array",
-                                        "label": "Messages",
-                                        "required": true
+                                            "name": "value"
+                                        }
                                     },
                                     {
                                         "name": "response_format",
